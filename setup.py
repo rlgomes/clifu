@@ -13,7 +13,7 @@ setup (
     name='clf',
     version='0.1.0',
     author='Rodney Gomes',
-    author_email='rodneygomes@attention: gmail.com',
+    author_email='rodneygomes@gmail.com',
     url='',
     keywords = ['cli','commandlinefu'],
     scripts = ['build/clifu'],
