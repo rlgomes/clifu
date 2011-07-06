@@ -1,0 +1,31 @@
+CLIFU 
+-----
+
+This is a simple command line interface for the commandlinefu website which 
+allows you to quickly look up command line samples of great recipes by either 
+searching for a matching string or searching for the recipes by tag names.
+
+Installation
+------------
+
+$ python3 setup.py install 
+
+*you may need to be root
+
+Example Usage
+-------------
+
+1. Lookup command line recipes related with HTTP
+
+rlgomes@x200> clifu "http"       
+# Serve current directory tree at http://$HOSTNAME:8000/
+python -m SimpleHTTPServer
+
+# start a tunnel from some machine's port 80 to your local post 2001
+ssh -N -L2001:localhost:80 somemachine
+
+# Update twitter via curl
+curl -u user:pass -d status="Tweeting from the shell" http://twitter.com/statuses/update.xml
+
+# Mount folder/filesystem through SSH
+sshfs name@server:/path/to/folder /path/to/mount/point
