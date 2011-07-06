@@ -43,6 +43,7 @@ def usage():
     print("clifu [-h] [-t tag] [-n number_of_commands] [string_to_match]")
 
 def main():
+    
     try:
         opts, args = getopt.getopt(sys.argv[1:], "ht:n:", ["help"])
     except getopt.GetoptError as err:
@@ -51,8 +52,11 @@ def main():
         sys.exit(2)
       
     entries = 5
-    matching = args[0]
+    matching = None
     tagged = None
+    
+    if len(args) > 0:
+        matching = args[0]
     
     for o, a in opts:
         if o in ("-h", "--help"):
@@ -64,6 +68,10 @@ def main():
             entries = int(a); 
         else:
             assert False, "Unhandled option"
+            
+    if matching == None and tagged == None:
+        usage()
+        sys.exit(2)
            
     if matching != None: 
         clifu_query_matching(matching,"sort-by-votes","plaintext",entries) 
