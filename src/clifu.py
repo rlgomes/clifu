@@ -31,6 +31,9 @@ def clifu_get_print_to_console(url,entries):
             break;
         print(commands[c] + "\n")
 
+def clifu_using_get_url(query,format):
+    return "/commands/using/%s/%s" % (query,format)
+
 def clifu_matching_get_url(query,sort,format):
     queryb64 = bytes.decode(base64.b64encode(query.encode()))
     query = urllib.parse.quote(query)
@@ -41,12 +44,12 @@ def clifu_tagged_get_url(query,format):
     return "/commands/tagged/163/%s/%s" % (query,format)
 
 def usage():
-    print("clifu [-h] [-t tag] [-n number_of_commands] [string_to_match]")
+    print("clifu [-h] [-u command_name_to_search] [-n number_of_results] [string_to_match]")
 
 def main():
     
     try:
-        opts, args = getopt.getopt(sys.argv[1:], "hwt:n:", ["help"])
+        opts, args = getopt.getopt(sys.argv[1:], "hwn:u:", ["help"])
     except getopt.GetoptError as err:
         print(err)
         usage()
@@ -54,7 +57,7 @@ def main():
       
     entries = 5
     matching = None
-    tagged = None
+    using = None
     openwebbrowser = False
     format = "plaintext"
     
@@ -65,8 +68,8 @@ def main():
         if o in ("-h", "--help"):
             usage()
             sys.exit()
-        elif o in ("-t"):
-            tagged = a
+        elif o in ("-u"):
+            using = a
         elif o in ("-n"):
             entries = int(a); 
         elif o in ("-w"):
@@ -74,19 +77,19 @@ def main():
             format=""
         else:
             assert False, "Unhandled option"
-            
-    if matching == None and tagged == None:
-        usage()
-        sys.exit(2)
     
     url = None
-           
+
     if matching != None: 
         url = clifu_matching_get_url(matching,"sort-by-votes",format) 
-    
-    if tagged != None:
-        url = clifu_tagged_get_url(tagged, format)
-
+        
+    if using != None:
+        url = clifu_using_get_url(using,format)
+        
+    if not(url):
+        usage()
+        sys.exit(2)
+        
     if openwebbrowser:
         clifu_open_in_browser(url)
     else:
