@@ -10,7 +10,7 @@ if not(os.path.exists("build")):
 shutil.copyfile('src/clifu.py', 'build/clifu')
 
 setup (
-    name='clf',
+    name='clifu',
     version='0.1.0',
     author='Rodney Gomes',
     author_email='rodneygomes@gmail.com',
