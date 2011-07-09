@@ -21,6 +21,13 @@ CJ = http.cookiejar.CookieJar()
 opener = urllib.request.build_opener(urllib.request.HTTPCookieProcessor(CJ))
 urllib.request.install_opener(opener)
 
+class CLIFuError(Exception):
+    def __init__(self, value):
+        self.value = value
+        
+    def __str__(self):
+        return repr(self.value)
+
 def clifu_open_in_browser(url):
     if platform.system() == "Linux":
         os.system("xdg-open http://www.commandlinefu.com/" + url);
@@ -30,12 +37,18 @@ def clifu_open_in_browser(url):
 
 def clifu_update_auth_cookies(username,password): 
     url = "http://www.commandlinefu.com/users/signin"
-    data = bytes("username=%s&password=%s&remember=on&submit=Let+me+in!" % (username,password),"utf8");
+    data = bytes("username=%s&password=%s&remember=on&submit=Let+me+in!" % \
+                 (username,password),"utf8");
     
     response = urlopen(url, data)
     
-    if response.status != 200:
-        print("Failed to login: %d - %s " % (response.status,response.read()))
+    headers = response.getheaders()
+    
+    for (_,value) in headers:
+        if value.find("successful-signin") != -1:
+            return
+        
+    raise CLIFuError("Login failed for %s" % username)
     
 def clifu_get_print_to_console(url,entries):
     url = "http://www.commandlinefu.com/%s" % url
@@ -50,7 +63,7 @@ def clifu_get_print_to_console(url,entries):
                 break;
             print(commands[c] + "\n")
     else:
-        print("Communication Failure: %d - %s" % (response.status,response.read()))
+        raise CLIFuError("HTTP Error: %d" % response.status)
 
 def clifu_using_get_url(query,format):
     return "/commands/using/%s/%s" % (query,format)
