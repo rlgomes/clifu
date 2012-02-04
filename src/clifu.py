@@ -1,7 +1,7 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python2.7
 
-import http.cookiejar
-import urllib
+import cookielib
+import urllib2
 import base64
 import getopt
 
@@ -11,15 +11,12 @@ import sys
 import os
 import platform
 
-from urllib.request import urlopen
-
 #import http.client
 #http.client.HTTPConnection.debuglevel=True
 
-CJ = http.cookiejar.CookieJar()
-
-opener = urllib.request.build_opener(urllib.request.HTTPCookieProcessor(CJ))
-urllib.request.install_opener(opener)
+jar = cookielib.CookieJar()
+opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(jar))
+urllib2.install_opener(opener)
 
 class CLIFuError(Exception):
     def __init__(self, value):
