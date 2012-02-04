@@ -37,7 +37,8 @@ def clifu_update_auth_cookies(username,password):
     data = bytes("username=%s&password=%s&remember=on&submit=Let+me+in!" % \
                  (username,password),"utf8");
     
-    response = urlopen(url, data)
+    req = urllib2.Request(url,data)
+    response = urllib2.urlopen(req)
     
     headers = response.getheaders()
     
@@ -49,9 +50,11 @@ def clifu_update_auth_cookies(username,password):
     
 def clifu_get_print_to_console(url,entries):
     url = "http://www.commandlinefu.com/%s" % url
-    response = urlopen(url)
-
-    if ( response.status == 200 ):
+    
+    req = urllib2.Request(url)
+    response = urllib2.urlopen(req)
+    
+    if ( response.getcode() == 200 ):
         data = bytes.decode(response.read())
         commands = data.split("\n\n")
       
@@ -67,11 +70,11 @@ def clifu_using_get_url(query,format):
 
 def clifu_matching_get_url(query,sort,format):
     queryb64 = bytes.decode(base64.b64encode(query.encode()))
-    query = urllib.parse.quote(query)
+    query = urllib2.quote(query)
     return "/commands/matching/%s/%s/%s/%s" % (query,queryb64,sort,format)
     
 def clifu_tagged_get_url(query,format):
-    query = urllib.parse.quote(query)
+    query = urllib2.quote(query)
     return "/commands/tagged/163/%s/%s" % (query,format)
 
 def clifu_favourites_get_url():
